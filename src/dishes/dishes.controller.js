@@ -23,7 +23,16 @@ const bodyHasData = propertyName => {
 
 // Router handlers
 const create = (req, res) => {
-  
+  const { data: { name, description, price, image_url } = {} }  = req.body;
+  const newDish = {
+    id: nextId(),
+    name: name,
+    description: description,
+    price: price,
+    image_url: image_url,
+  };
+  dishes(newDish);
+  json.status(201).json({ data: newDish })
 };
 
 const read = (req, res) => {
@@ -39,5 +48,12 @@ const list = (req, res) => {
 };
 
 module.exports = {
-  
-}
+  create: [
+    bodyHasData("name"),
+    bodyHasData("description"),
+    bodyHasData("price"),
+    bodyHasData("image_url"),
+    create,
+    bodyHasData("id")
+  ]
+};
