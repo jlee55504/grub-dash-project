@@ -20,6 +20,16 @@ const bodyHasData = propertyName => {
   };
 };
 
+const propertiesHaveSyntax = propertyName => {
+    return (req, res, next) => {
+    const { data = {} } = req.body;
+    if (object.values(data[propertyName]) || data[propertyName] !== "") return next();
+    next({
+      status: 400,
+      message: `${propertyName} text is missing`,
+    });
+  };
+}
 
 // Router handlers
 const create = (req, res) => {
@@ -32,7 +42,7 @@ const create = (req, res) => {
     image_url: image_url,
   };
   dishes(newDish);
-  json.status(201).json({ data: newDish })
+  json.status(201).json({ data: newDish });
 };
 
 const read = (req, res) => {
@@ -53,6 +63,10 @@ module.exports = {
     bodyHasData("description"),
     bodyHasData("price"),
     bodyHasData("image_url"),
+    propertiesHaveSyntax("name"),
+    propertiesHaveSyntax("description"),
+    propertiesHaveSyntax("price"),
+    propertiesHaveSyntax("image_url"),
     create,
     bodyHasData("id")
   ]
