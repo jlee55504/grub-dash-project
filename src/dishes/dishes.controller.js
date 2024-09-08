@@ -63,7 +63,7 @@ const update = (req, res) => {
 };
 
 const list = (req, res) => {
-  
+  res.json({ data: dishes });
 };
 
 module.exports = {
@@ -79,5 +79,6 @@ module.exports = {
     priceIsValidNumber("price"),
     create,
     bodyHasData("id")
-  ]
+  ],
+  list
 };
