@@ -32,7 +32,7 @@ const propertiesHaveSyntax = propertyName => {
 }
 
 const priceIsValidNumber = (req, res, next) => {
-  const { data: { price } } = req.body;
+  const { data: { price } = {} } = req.body;
   if (Number.isInteger(data[price]) && data[price] > 0) return next();
   next({
     status: 400,
