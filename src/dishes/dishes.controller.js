@@ -23,7 +23,7 @@ const bodyHasData = propertyName => {
 const propertiesHaveSyntax = propertyName => {
     return (req, res, next) => {
     const { data = {} } = req.body;
-    if (object.values(data[propertyName]) || data[propertyName] !== "") return next();
+    if (typeof object.values(data[propertyName] === "string") || data[propertyName] !== "") return next();
     next({
       status: 400,
       message: `${propertyName} text is missing`,
