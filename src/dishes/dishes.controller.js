@@ -9,7 +9,7 @@ const nextId = require("../utils/nextId");
 // TODO: Implement the /dishes handlers needed to make the tests pass
 
 // Middleware functions
-const bodyHasData = propertyName => {
+const bodyDataHas = propertyName => {
   return (req, res, next) => {
     const { data = {} } = req.body;
     if (data[propertyName]) return next();
@@ -23,7 +23,7 @@ const bodyHasData = propertyName => {
 const propertiesHaveSyntax = propertyName => {
     return (req, res, next) => {
     const { data = {} } = req.body;
-    if (typeof object.values(data[propertyName] === "string") || data[propertyName] !== "") return next();
+    if (typeof data[propertyName] === "string" || data[propertyName] !== "") return next();
     next({
       status: 400,
       message: `${propertyName} text is missing`,
@@ -33,7 +33,7 @@ const propertiesHaveSyntax = propertyName => {
 
 const priceIsValidNumber = (req, res, next) => {
   const { data: { price } = {} } = req.body;
-  if (Number.isInteger(data[price]) && data[price] > 0) return next();
+  if (Number.isInteger(price) && price > 0) return next();
   next({
     status: 400,
     message: `Price requires a valid number`,
@@ -45,13 +45,14 @@ const create = (req, res) => {
   const { data: { name, description, price, image_url } = {} }  = req.body;
   const newDish = {
     id: nextId(),
-    name: name,
-    description: description,
-    price: price,
-    image_url: image_url,
+    name,
+    description,
+    price,
+    image_url,
   };
-  dishes(newDish);
-  json.status(201).json({ data: newDish });
+  dishes.push(newDish);
+  console.log(newDish);
+  res.status(201).json({ data: newDish });
 };
 
 const read = (req, res) => {
@@ -68,17 +69,17 @@ const list = (req, res) => {
 
 module.exports = {
   create: [
-    bodyHasData("name"),
-    bodyHasData("description"),
-    bodyHasData("price"),
-    bodyHasData("image_url"),
+    bodyDataHas("name"),
+    bodyDataHas("description"),
+    bodyDataHas("price"),
+    bodyDataHas("image_url"),
     propertiesHaveSyntax("name"),
     propertiesHaveSyntax("description"),
     propertiesHaveSyntax("price"),
     propertiesHaveSyntax("image_url"),
-    priceIsValidNumber("price"),
+    priceIsValidNumber,
     create,
-    bodyHasData("id")
+    bodyDataHas("id")
   ],
   list
 };
