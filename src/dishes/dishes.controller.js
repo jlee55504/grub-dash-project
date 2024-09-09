@@ -46,11 +46,21 @@ const dishExists = (req, res, next) => {
   if (foundDish) {
     res.locals.dish = foundDish;
     return next();
-  }
+  };
   next({
     status: 404,
     message: `Dish id not found: ${dishId}`,
   });
+};
+
+const dishIdsmatch = (req, res, next) => {
+  const { dishId } = req.params;
+  const { data: { id } = {} } = req.body;
+  if (id && dishId !== id) return next({
+    status: 400,
+    message: `Dish id does not match route id. Dish: ${id}, Route: ${dishId}`,
+  });
+  next();
 }
 
 // Router handlers
@@ -117,6 +127,7 @@ module.exports = {
     propertiesHaveSyntax("image_url"),
     priceIsValidNumber,
     dishExists,
+    dishIdsmatch,
     update
   ]
 };
