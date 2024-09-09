@@ -115,18 +115,17 @@ module.exports = {
     read
   ],
   update: [
+    dishExists,
+    dishIdsmatch,
     bodyDataHas("name"),
     bodyDataHas("description"),
     bodyDataHas("price"),
     bodyDataHas("image_url"),
-    bodyDataHas("id"),
     propertiesHaveSyntax("name"),
     propertiesHaveSyntax("description"),
     propertiesHaveSyntax("price"),
     propertiesHaveSyntax("image_url"),
     priceIsValidNumber,
-    dishExists,
-    dishIdsmatch,
     update
   ]
 };
