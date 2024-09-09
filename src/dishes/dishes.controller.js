@@ -29,16 +29,29 @@ const propertiesHaveSyntax = propertyName => {
       message: `${propertyName} text is missing`,
     });
   };
-}
+};
 
 const priceIsValidNumber = (req, res, next) => {
   const { data: { price } = {} } = req.body;
   if (Number.isInteger(price) && price > 0) return next();
   next({
     status: 400,
-    message: `Price requires a valid number`,
-  })
-} 
+    message: `price`,
+  });
+};
+
+const dishExists = (req, res, next) => {
+  const { dishId } = req.params;
+  const foundDish = dishes.find(dish => dish.id === dishId);
+  if (foundDish) {
+    res.locals.dish = foundDish;
+    return next();
+  }
+  next({
+    status: 404,
+    message: `Dish id not found: ${dishId}`,
+  });
+}
 
 // Router handlers
 const create = (req, res) => {
@@ -55,11 +68,18 @@ const create = (req, res) => {
 };
 
 const read = (req, res) => {
-  
+  res.json({ data: res.locals.dish });
 };
 
 const update = (req, res) => {
-  
+  const { data: { id, name, description, price, image_url } = {} } = req.body;
+  const dish = res.locals.dish;
+  dish.id = id;
+  dish.name = name;
+  dish.description = description;
+  dish.price = price;
+  dish.image_url = image_url;
+  res.json({ data: dish });
 };
 
 const list = (req, res) => {
@@ -80,5 +100,23 @@ module.exports = {
     create,
     bodyDataHas("id")
   ],
-  list
+  list,
+  read: [
+    dishExists,
+    read
+  ],
+  update: [
+    bodyDataHas("name"),
+    bodyDataHas("description"),
+    bodyDataHas("price"),
+    bodyDataHas("image_url"),
+    bodyDataHas("id"),
+    propertiesHaveSyntax("name"),
+    propertiesHaveSyntax("description"),
+    propertiesHaveSyntax("price"),
+    propertiesHaveSyntax("image_url"),
+    priceIsValidNumber,
+    dishExists,
+    update
+  ]
 };
