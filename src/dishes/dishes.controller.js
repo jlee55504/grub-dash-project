@@ -51,7 +51,6 @@ const create = (req, res) => {
     image_url,
   };
   dishes.push(newDish);
-  console.log(newDish);
   res.status(201).json({ data: newDish });
 };
 
