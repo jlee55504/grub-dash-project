@@ -41,6 +41,19 @@ const propertiesHaveSyntax = propertyName =>{
     next();
   };
 
+  const quantityIsValidNumber = (req, res, next) => {
+    const { data: { id, dishes: [{ quantity }] } = {} } = req.body;
+  const index = orders.findIndex((order) => order.id === id);
+      if (!quantity || !Number.isInteger(quantity) || quantity <= 0) {
+        return next({
+          status: 400,
+          message: `dish ${index} must have a quantity that is an integer greater than 0`,
+        });
+      }
+    next();
+  }
+  
+
 // Router handlers
 const list = (req, res) => {
   res.json({ data: orders });
