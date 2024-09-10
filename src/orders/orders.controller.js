@@ -53,19 +53,7 @@ const propertiesHaveSyntax = propertyName =>{
     next();
   }
 
-  const orderExists = (req, res, next) => {
-    const { orderId } = req.params;
-    const foundOrder = orders.find(order => order.id === orderId);
-    if (foundOrder) {
-      res.locals.order = foundOrder;
-      return next();
-    };
-    next({
-      status: 404,
-      message: `Order id not found: ${orderId}`,
-    });
-  };
-  
+
 
 // Router handlers
 const list = (req, res) => {
@@ -73,7 +61,16 @@ const list = (req, res) => {
 }
 
 const create = (req, res) => {
-  
+    const { data: { deliverTo, mobileNumber, status, dishes } = {} } = req.body;
+    const newOrder = {
+      id: nextId(),
+      deliverTo,
+      mobileNumber,
+      status,
+      ...dishes,
+    }
+    orders.push(newOrder);
+    res.status(201).json({ data: newOrder });  
 }
 
 const read = (req, res) => {
