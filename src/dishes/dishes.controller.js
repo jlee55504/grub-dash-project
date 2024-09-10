@@ -36,7 +36,7 @@ const priceIsValidNumber = (req, res, next) => {
   if (Number.isInteger(price) && price > 0) return next();
   next({
     status: 400,
-    message: `price`,
+    message: `Dish must have a price that is an integer greater than 0`,
   });
 };
 
