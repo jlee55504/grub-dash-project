@@ -21,6 +21,17 @@ const bodyDataHas = propertyName => {
 };
 
 
+const propertiesHaveSyntax = propertyName =>{
+    return (req, res, next) => {
+      const { data = {} } = req.body;
+      if (data[propertyName] !== "") return next();
+      next({
+        status: 400,
+        message: `Order must includes a ${propertyName}`,
+      });  
+    };
+  };
+
 // Router handlers
 const list = (req, res) => {
   res.json({ data: orders });
@@ -35,7 +46,7 @@ const read = (req, res) => {
 }
 
 const update = (req, res) => {
-  
+
 }
 
 const destroy = (req, res) => {
