@@ -32,6 +32,15 @@ const propertiesHaveSyntax = propertyName =>{
     };
   };
 
+  const checkDishesProperty = (req, res, next) => {
+    const { data: { dishes } = {} } = req.body;
+    if (!Array.isArray(dishes) || dishes.length === 0) return next({
+      status: 400,
+      message: "Order must include at least one dish",
+    });
+    next();
+  };
+
 // Router handlers
 const list = (req, res) => {
   res.json({ data: orders });
