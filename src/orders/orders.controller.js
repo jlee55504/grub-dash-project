@@ -84,9 +84,16 @@ const update = (req, res) => {
 const destroy = (req, res) => {
   
 }
+
 module.exports = {
-  create: [
-    
-  ],
-  list
-}
+    create: [
+      bodyDataHas("deliverTo"),
+      bodyDataHas("mobileNumber"),
+      propertiesHaveSyntax("deliverTo"),
+      propertiesHaveSyntax("mobileNumber"),
+      checkDishesProperty,
+      quantityIsValidNumber,
+      create
+    ],
+    list
+  }
