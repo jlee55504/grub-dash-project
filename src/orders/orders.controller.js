@@ -42,14 +42,13 @@ const propertiesHaveSyntax = propertyName =>{
   };
 
   const quantityIsValidNumber = (req, res, next) => {
-    const { data: { id, dishes: [{ quantity }] } = {} } = req.body;
-  const index = orders.findIndex((order) => order.id === id);
-      if (!quantity || !Number.isInteger(quantity) || quantity <= 0) {
-        return next({
+    const { data: { dishes } = {} } = req.body;
+    for (let i = 0; i < dishes.length; i++) {
+      if (!dishes[i].quantity || typeof dishes[i].quantity !== "number" ||  dishes[i].quantity <= 0) return next({
           status: 400,
-          message: `dish ${index} must have a quantity that is an integer greater than 0`,
+          message: `dish ${i} must have a quantity that is an integer greater than 0`,
         });
-      }
+    };
     next();
   }
 
