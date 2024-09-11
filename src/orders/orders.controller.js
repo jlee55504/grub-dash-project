@@ -99,9 +99,8 @@ const statusPropertyNotPending = (req, res, next) => {
 
 
 // Router handlers
-const list = (req, res) => {
-  res.json({ data: orders });
-};
+const list = (req, res) => res.json({ data: orders });
+
 
 const create = (req, res) => {
   const { data: { deliverTo, mobileNumber, status, dishes } = {} } = req.body;
@@ -116,9 +115,8 @@ const create = (req, res) => {
   res.status(201).json({ data: newOrder });  
 };
 
-const read = (req, res) => {
-  res.json({ data: res.locals.order });
-};
+const read = (req, res) => res.json({ data: res.locals.order });
+
 
 const update = (req, res) => {
   const { data: { deliverTo, mobileNumber, status, dishes } = {} } = req.body;
