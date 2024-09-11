@@ -92,6 +92,15 @@ const propertiesHaveSyntax = propertyName =>{
     next();
   }
 
+const statusPropertyNotPending = (req, res, next) => {
+  const { status }  = res.locals.order;
+  if (status !== "pending") return next({
+    status: 400,
+    message: "An order cannot be deleted unless it is pending."
+  });
+  next();
+};
+
 // Router handlers
 const list = (req, res) => {
   res.json({ data: orders });
@@ -125,7 +134,10 @@ const update = (req, res) => {
 }
 
 const destroy = (req, res) => {
-  
+  const { orderId } = req.params;
+  const index = orders.findIndex((order) => order.id === orderId);
+  orders.splice(index, 1);
+  res.sendStatus(204);  
 }
 
 module.exports = {
@@ -149,6 +161,12 @@ module.exports = {
         checkDishesProperty,
         quantityIsValidNumber,
         update
+      ],
+      delete: [
+        orderExists,
+        orderIdsMatch,
+        statusPropertyNotPending,
+        destroy
       ],
     list
   }
