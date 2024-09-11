@@ -65,6 +65,33 @@ const propertiesHaveSyntax = propertyName =>{
     });
   };
 
+  const orderIdsMatch = (req, res, next) => {
+    const { orderId } = req.params;
+    const { data: { id } = {} } = req.body;
+    if (id && id !== orderId) return next({
+      status: 400,
+      message: `Order id does not match route id. Order: ${id}, route: ${orderId}`,
+    });
+    next();
+  };
+
+  const statusPropertyIsValid = (req, res, next) => {
+    const { data = {} } = req.body;
+    const { status } = data;
+    if (!data.hasOwnProperty("status") || status === "" || status !== "pending") {
+      return next({
+        status: 400,
+        message: "Order must have a status of pending, preparing, out-for-delivery, delivered",
+      });
+    } else if (status === "delivered") {
+        return next({
+          status: 400,
+          message: "A delivered order cannot be changed",
+      });
+    };
+    next();
+  }
+
 // Router handlers
 const list = (req, res) => {
   res.json({ data: orders });
@@ -88,7 +115,13 @@ const read = (req, res) => {
 }
 
 const update = (req, res) => {
-
+    const { data: { deliverTo, mobileNumber, status, dishes } = {} } = req.body;
+    const order = res.locals.order;
+    order.deliverTo = deliverTo;
+    order.mobileNumber = mobileNumber;
+    order.status = status;
+    order.dishes = dishes;
+    res.json({ data: order });
 }
 
 const destroy = (req, res) => {
@@ -99,8 +132,6 @@ module.exports = {
     create: [
       bodyDataHas("deliverTo"),
       bodyDataHas("mobileNumber"),
-      propertiesHaveSyntax("deliverTo"),
-      propertiesHaveSyntax("mobileNumber"),
       checkDishesProperty,
       quantityIsValidNumber,
       create
@@ -108,6 +139,16 @@ module.exports = {
     read: [
         orderExists,
         read
+      ],
+      update: [
+        orderExists,
+        orderIdsMatch,
+        statusPropertyIsValid,
+        bodyDataHas("deliverTo"),
+        bodyDataHas("mobileNumber"),
+        checkDishesProperty,
+        quantityIsValidNumber,
+        update
       ],
     list
   }
