@@ -50,7 +50,7 @@ Contains the 'methodNotAllowed' 'route handler' which displays an error message 
 Contains the 'notFound' 'route handler' which displays an error message if users a nonexistent URL path.
 
 
-## data
+## data folder
 
 ### dishes-data.js
 Contains the 'dishes' data.
