@@ -61,7 +61,7 @@ const dishIdsmatch = (req, res, next) => {
     message: `Dish id does not match route id. Dish: ${id}, Route: ${dishId}`,
   });
   next();
-}
+};
 
 // Router handlers
 const create = (req, res) => {
@@ -77,9 +77,8 @@ const create = (req, res) => {
   res.status(201).json({ data: newDish });
 };
 
-const read = (req, res) => {
-  res.json({ data: res.locals.dish });
-};
+const read = (req, res) => res.json({ data: res.locals.dish });
+
 
 const update = (req, res) => {
   const { data: { name, description, price, image_url } = {} } = req.body;
@@ -91,9 +90,8 @@ const update = (req, res) => {
   res.json({ data: dish });
 };
 
-const list = (req, res) => {
-  res.json({ data: dishes });
-};
+const list = (req, res) => res.json({ data: dishes });
+
 
 module.exports = {
   create: [
