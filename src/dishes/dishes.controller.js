@@ -10,7 +10,7 @@ const nextId = require("../utils/nextId");
 
 // Middleware functions
 const bodyDataHas = propertyName => {
-  return (req, res, next) => {
+  const checkbodyDataHas = (req, res, next) => {
     const { data = {} } = req.body;
     if (data[propertyName]) return next();
     next({
@@ -18,10 +18,11 @@ const bodyDataHas = propertyName => {
       message: `Must include a ${propertyName}`,
     });
   };
+  return checkbodyDataHas;
 };
 
 const propertiesHaveSyntax = propertyName => {
-    return (req, res, next) => {
+  const checkPropertiesHaveSyntax = (req, res, next) => {
     const { data = {} } = req.body;
     if (typeof data[propertyName] === "string" || data[propertyName] !== "") return next();
     next({
@@ -29,6 +30,7 @@ const propertiesHaveSyntax = propertyName => {
       message: `${propertyName} text is missing`,
     });
   };
+  return checkPropertiesHaveSyntax;
 };
 
 const priceIsValidNumber = (req, res, next) => {
